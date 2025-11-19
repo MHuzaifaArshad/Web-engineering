@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="recipeApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Recipe Manager</title>
+
+  <!-- AngularJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body ng-controller="MainCtrl as vm">
+
+  <div class="container">
+    <h1>🍽️ Recipe Manager</h1>
+
+   
+    <input type="text" ng-model="vm.search" class="search-box" placeholder="Search recipes...">
+
+   
+    <form ng-submit="vm.saveRecipe()" class="form-card">
+      <h2>{{ vm.editMode ? 'Edit Recipe' : 'Add Recipe' }}</h2>
+
+      <label>Title *</label>
+      <input type="text" ng-model="vm.form.title" required>
+
+      <label>Ingredients *</label>
+      <input type="text" ng-model="vm.form.ingredients" required placeholder="Comma separated">
+
+      <label>Instructions *</label>
+      <textarea ng-model="vm.form.instructions" required></textarea>
+
+      <label>Image (optional)</label>
+      <input type="file" accept="image/*" onchange="angular.element(this).scope().vm.handleImage(this.files)">
+
+      <button type="submit" class="btn-primary">
+        {{ vm.editMode ? 'Update' : 'Add Recipe' }}
+      </button>
+
+      <button type="button" class="btn-secondary" ng-if="vm.editMode" ng-click="vm.cancelEdit()">
+        Cancel
+      </button>
+    </form>
+
+   
+    <div class="recipe-list">
+      <div class="recipe-card"
+           ng-repeat="r in vm.recipes | filter:vm.search">
+
+        <img ng-if="r.image" ng-src="{{r.image}}">
+        <div ng-if="!r.image" class="placeholder-img">No Image</div>
+
+        <h3>{{ r.title }}</h3>
+        <p><strong>Ingredients:</strong> {{ r.ingredients }}</p>
+
+        <div class="actions">
+          <button class="btn-secondary" ng-click="vm.editRecipe(r)">Edit</button>
+          <button class="btn-danger" ng-click="vm.deleteRecipe(r.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
